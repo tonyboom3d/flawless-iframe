@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;600;700;800&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --body-max:739px;          
+  --wrapper-pad:10px;        
+  --card-w:430px;            
+  --card-h:121px;
+  --gap:25px;                
+  --copy-max: calc(var(--body-max) - var(--card-w) - var(--gap) - var(--wrapper-pad));
+  --ink:#605E5E;
+  --muted:#A0A09F;
+  --chip:#EDEDED;
+  --pink:#F04885;
+  --btn:#D14175;
+  --green:#68B04D;
+  --line:#e9e9e9;
+  --price-right: 160px;
+  --cards: 4;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:Assistant,system-ui,Arial;background:#fff;color:#1b1b1b}
+.wrapper{max-width:var(--body-max);margin-inline:auto;padding:5px}
+
+/* grid for copy + packages */
+.grid{display:grid;grid-template-columns:minmax(0,var(--copy-max)) var(--card-w);gap:10px;align-items:start;direction:ltr}
+
+/* copy column - Desktop version with scroll */
+.copy{direction:rtl;text-align:right;max-width:var(--copy-max)}
+.copy h1{margin:0 0 6px;font-weight:800;font-size:22px;color:#000}
+.copy p{margin:0 0 14px;line-height:1.8;font-weight:300;font-size:16px;color:#333}
+.copy .section-title{font-weight:800;font-size:22px;margin:22px 0 8px;color:#000}
+.copy .list{margin:0;padding:0;list-style:none}
+.copy .list li{padding:6px 0;font-weight:300;color:#333;position:relative;padding-inline-start:28px}
+.copy .list li::before{content:"✓";position:absolute;inset-inline-start:0;top:6px;color:#68B04D;font-size:16px;line-height:1}
+
+/* Desktop: scroll container */
+.copy-scroll{height:calc(var(--card-h)*var(--cards) + var(--gap)*(var(--cards) - 1));max-height:calc(var(--card-h)*var(--cards) + var(--gap)*(var(--cards) - 1));overflow-y:auto;padding-inline-end:6px;direction:ltr;scrollbar-width:thin;scrollbar-color:rgba(0,0,0,.25) transparent}
+.copy-scroll>*{direction:rtl}
+.copy-scroll::-webkit-scrollbar{width:8px}
+.copy-scroll::-webkit-scrollbar-track{background:transparent}
+.copy-scroll::-webkit-scrollbar-thumb{background:rgba(0,0,0,.18);border-radius:8px}
+.copy-scroll::-webkit-scrollbar-thumb:hover{background:rgba(0,0,0,.28)}
+
+/* Mobile: collapsible box (hidden on desktop) */
+.copy-box{display:none}
+
+/* packages */
+.packages{display:flex;flex-direction:column;gap:var(--gap);text-align:right;direction:rtl}
+.card{position:relative;width:var(--card-w);max-width:100%;height:var(--card-h);background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 6px 18px rgba(0,0,0,.08);overflow:hidden}
+.nameTag{position:absolute;inset-block-start:0;inset-inline-end:0;inset-inline-start:auto;background:var(--chip);color:var(--ink);font-weight:800;font-size:16px;padding:8px 14px;border-radius:8px 0 80px 0}
+.badges{position:absolute;inset-block-start:14px;transform:translateX(-50%);display:flex;gap:6px}
+.badge{display:inline-flex;align-items:center;justify-content:center;height:27px;border-radius:999px;color:#000000;font-size:16px;padding:0 5px;gap:6px}
+.badge.benefit{width:115px;background:#E8DACA;order:1}
+.badge.months{width:88px;background:#f3f3f3;color:#777;order:2}
+.price{position:absolute;inset-inline-end:var(--price-right);top:50px;transform:none;display:flex;flex-direction:column;text-align:right;width:auto;z-index:2}
+.value{display:inline-flex;align-items:center;gap:6px;color:var(--pink);font-weight:800;font-size:28px;line-height:1;direction:rtl;unicode-bidi:isolate;text-align:right}
+.meta{color:var(--muted);font-weight:300;font-size:17px;margin-top:6px;align-self:stretch;text-align:right}
+.thumb{position:absolute;inset-block-start:12px;width:90px;height:98px;object-fit:contain}
+.btn{position:absolute;inset-inline-end:16px;inset-inline-start:auto;inset-block-end:14px;width:120px;height:35px;background:var(--btn);color:#fff;font-weight:700;font-size:15px;border:0;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;gap:4px;cursor:pointer;transition:opacity .15s linear}
+.btn:hover{opacity:.9}
+.btn.loading{pointer-events:none;opacity:.8}
+.btn.loading .btn-text{display:none}
+.btn.loading .btn-icon{display:none}
+.btn-loader{display:none;width:20px;height:20px;border:3px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin 0.8s linear infinite}
+.btn.loading .btn-loader{display:block}
+@keyframes spin{to{transform:rotate(360deg)}}
+.btn img{width:18px;height:18px}
+.badge img{width:15px;height:15px}
+
+.packages-header{grid-column:1 / -1;direction:rtl;text-align:center;font-weight:800;font-size:20px;color:#D14175;margin:12px 0 20px 0;padding:0;background:transparent;border:none;border-radius:0}
+.copy{grid-column:1}
+.packages{grid-column:2}
+
+/* Mobile responsive */
+@media(max-width:720px){
+  :root{
+    --card-h:174px;
+  }
+  
+  .grid{grid-template-columns:1fr;gap:10px}
+  .packages,.copy{grid-column:auto}
+  .copy{max-width:100%;padding:0}
+  
+  /* Hide desktop scroll, show mobile collapsible */
+  .copy-scroll{display:none}
+  .copy-box{
+    display:block;
+    position:relative;
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:12px;
+    width:100%;
+    margin:0;
+  }
+  .copy-inner{
+    max-height:140px;
+    overflow:hidden;
+    transition:max-height .25s ease;
+  }
+  .copy-box.expanded .copy-inner{
+    max-height:none;
+  }
+  .copy-fade{
+    position:absolute;
+    bottom:44px;
+    height:34px;
+    background:linear-gradient(to bottom, rgba(255,255,255,0), #fff);
+  }
+  .copy-box.expanded .copy-fade{
+    display:none;
+  }
+  .copy-toggle{
+    position:absolute;
+    bottom:8px;
+    left:10px;
+    font-weight:700;
+    font-size:12px;
+    line-height:1;
+    border:1px solid #e8e8e8;
+    background:#fff;
+    color:#444;
+    border-radius:8px;
+    padding:4px 8px;
+    cursor:pointer;
+  }
+  
+  /* Adjust card elements for mobile */
+  .nameTag{font-size:13px}
+  .badge{height:20px;font-size:14px;padding:0 5px}
+  .badge.benefit{width:auto}
+  .badge.months{width:auto}
+  .badges{inset-block-start:46px}
+  .price{top:76px;right:0;left:0;width:100%;transform:none;text-align:center;padding:0 16px}
+  .value{font-size:22px;justify-content:center}
+  .meta{font-size:17px;margin-top:0px;text-align:center}
+  .thumb{width:70px;height:70px;inset-block-start:auto}
+  .btn{width:calc(100% - 32px);right:16px;left:16px}
+  .card{width:100%}
+}
+
+@media(max-width:620px){
+  .card{width:100%}
+}
+</style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="grid">
+      <div class="packages-header">נסי את פלולס היום עם קופון הנחה של 10%. קוד קופון: <b>פלולס10</b></div>
+      
+      <section class="copy" aria-label="תיאור המוצר">
+        <!-- Desktop version: scrollable -->
+        <div class="copy-scroll">
+          <h1>קומפלקס עשיר ויחודי</h1>
+          <p>המשלב בין קולגן פפטידים איכותי לבין מינרלים ווויטמינים חיוניים. פלולס הוא תוסף תזונה חדשני המגיע בצורה של סוכריות גומי נעימות בטעם תות המכילות 14 ויטמינים, מינרלים, ביוטין וקולגן.</p>
+          <p><strong>התמדה = הצלחה!</strong> לתוצאות מיטביות יש להתמיד והתמדה היא קשה כשחווית השימוש במוצר לא נעימה וכרוכה בבליעה של אבליות גדולות. סוד ההצלחה שלנו היא חווית השימוש הקלילה (והנעימה) וזאת הסיבה שהלקוחות שלנו רואות תוצאות מעולות.</p>
+          
+          <div class="section-title">רכיבים</div>
+          <p>קולגן פפטידים (ממקור דגים איכותי), ביוטין, ויטמין C, ויטמין A, ויטמין D, ויטמין B6, חומצה פולית, ויטמין B12, ויטמין B5, יוד, אבץ, כולין, אינוזיטול</p>
+          
+          <div class="section-title">יתרונות</div>
+          <ul class="list">
+            <li>נעים (ונעים) לשימוש</li>
+            <li>אין צורך לבלוע כדורים גדולים</li>
+            <li>קל להתמיד</li>
+            <li>מכיל 14 ויטמינים ומינרלים</li>
+            <li>מכיל קולגן איכותי</li>
+            <li>מיוצר תחת התקנים של ה-FDA</li>
+            <li>מיוצר תחת התקנים של משרד הבריאות</li>
+          </ul>
+        </div>
+        
+        <!-- Mobile version: collapsible -->
+        <div id="copyBox" class="copy-box">
+          <div id="copyInner" class="copy-inner">
+            <h1>קומפלקס עשיר ויחודי</h1>
+            <p>המשלב בין קולגן פפטידים איכותי לבין מינרלים ווויטמינים חיוניים. פלולס הוא תוסף תזונה חדשני המגיע בצורה של סוכריות גומי נעימות בטעם תות המכילות 14 ויטמינים, מינרלים, ביוטין וקולגן.</p>
+            <p><strong>התמדה = הצלחה!</strong> לתוצאות מיטביות יש להתמיד והתמדה היא קשה כשחווית השימוש במוצר לא נעימה וכרוכה בבליעה של אבליות גדולות. סוד ההצלחה שלנו היא חווית השימוש הקלילה (והנעימה) וזאת הסיבה שהלקוחות שלנו רואות תוצאות מעולות.</p>
+            
+            <div class="section-title">רכיבים</div>
+            <p>קולגן פפטידים (ממקור דגים איכותי), ביוטין, ויטמין C, ויטמין A, ויטמין D, ויטמין B6, חומצה פולית, ויטמין B12, ויטמין B5, יוד, אבץ, כולין, אינוזיטול</p>
+            
+            <div class="section-title">יתרונות</div>
+            <ul class="list">
+              <li>נעים (ונעים) לשימוש</li>
+              <li>אין צורך לבלוע כדורים גדולים</li>
+              <li>קל להתמיד</li>
+              <li>מכיל 14 ויטמינים ומינרלים</li>
+              <li>מכיל קולגן איכותי</li>
+              <li>מיוצר תחת התקנים של ה-FDA</li>
+              <li>מיוצר תחת התקנים של משרד הבריאות</li>
+            </ul>
+          </div>
+          <div class="copy-fade"></div>
+          <button id="copyToggle" class="copy-toggle" aria-expanded="false">המשך</button>
+        </div>
+      </section>
+      
+      <section class="packages" aria-label="חבילות">
+        <article class="card" data-package="1">
+          <div class="nameTag">מארז זוגי</div>
+          <div class="badges">
+            <div class="badge months">2 חודשים</div>
+            <div class="badge benefit">ערכת נסיון</div>
+          </div>
+          <div class="price">
+            <div class="value"><span class="num">269</span><span class="cur">₪</span></div>
+            <div class="meta">180 סוכיות | ליח' ₪135</div>
+          </div>
+          <img class="thumb" src="https://static.wixstatic.com/media/6b73e9_ff3325b1515046b6bd643b3f8e7772c7~mv2.png" alt="חבילה זוגית" />
+          <button class="btn" data-action="add">
+            <span class="btn-icon"><img src="https://static.wixstatic.com/shapes/6b73e9_65aaec0aab9b46a8a05faad5b934653a.svg" alt="" /></span>
+            <span class="btn-text">הוספה לעגלה</span>
+            <span class="btn-loader"></span>
+          </button>
+        </article>
+
+        <article class="card" data-package="2">
+          <div class="nameTag">מארז שלישייה</div>
+          <div class="badges">
+            <div class="badge months">3 חודשים</div>
+          </div>
+          <div class="price">
+            <div class="value"><span class="num">375</span><span class="cur">₪</span></div>
+            <div class="meta">270 סוכריות | ליח' ₪125</div>
+          </div>
+          <img class="thumb" src="https://static.wixstatic.com/media/6b73e9_0d2e55efbe0743a79f6ee8d5ba2c4912~mv2.png" alt="חבילת רבעייה" />
+          <button class="btn" data-action="add">
+            <span class="btn-icon"><img src="https://static.wixstatic.com/shapes/6b73e9_65aaec0aab9b46a8a05faad5b934653a.svg" alt="" /></span>
+            <span class="btn-text">הוספה לעגלה</span>
+            <span class="btn-loader"></span>
+          </button>
+        </article>
+
+        <article class="card" data-package="3">
+          <div class="nameTag">מארז חמישייה</div>
+          <div class="badges">
+            <div class="badge months">5 חודשים</div>
+            <div class="badge benefit">הכי נמכרת</div>
+          </div>
+          <div class="price">
+            <div class="value"><span class="num">549</span><span class="cur">₪</span></div>
+            <div class="meta">450 סוכריות | ליח' ₪110</div>
+          </div>
+          <img class="thumb" src="https://static.wixstatic.com/media/6b73e9_b5d0b0c73c61423e8b94a5f18a386a46~mv2.png" alt="חבילת שישייה" />
+          <button class="btn" data-action="add">
+            <span class="btn-icon"><img src="https://static.wixstatic.com/shapes/6b73e9_65aaec0aab9b46a8a05faad5b934653a.svg" alt="" /></span>
+            <span class="btn-text">הוספה לעגלה</span>
+            <span class="btn-loader"></span>
+          </button>
+        </article>
+        
+        <article class="card" data-package="4">
+          <div class="nameTag">מארז עשירייה</div>
+          <div class="badges">
+            <div class="badge months">10 חודשים</div>
+            <div class="badge benefit">הכי משתלמת</div>
+          </div>
+          <div class="price">
+            <div class="value"><span class="num">749</span><span class="cur">₪</span></div>
+            <div class="meta">900 סוכריות | ליח' ₪75</div>
+          </div>
+          <img class="thumb" src="https://static.wixstatic.com/media/6b73e9_da49f2861ae740c3bf56a04a15808b8b~mv2.png" alt="חבילת שישייה" />
+          <button class="btn" data-action="add">
+            <span class="btn-icon"><img src="https://static.wixstatic.com/shapes/6b73e9_65aaec0aab9b46a8a05faad5b934653a.svg" alt="" /></span>
+            <span class="btn-text">הוספה לעגלה</span>
+            <span class="btn-loader"></span>
+          </button>
+        </article>
+      </section>
+    </div>
+  </div>
+
+<script>
+// Device detection
+(function() {
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
+                   (window.innerWidth <= 720);
+  document.body.classList.add(isMobile ? 'mobile-device' : 'desktop-device');
+})();
+
+// Products data with new structure
+const products = {
+  1: {
+    productName: "מארז זוגי",
+    productKeyName: "מארז_זוגי",
+    productId: "15c59335-b3ff-f99c-920d-24e19fd424f0",
+    productImg: "https://static.wixstatic.com/media/aee543_4763f131f87a4a3f84bf028c73d0ecae~mv2.jpg",
+    productDescription: "₪135 ליח' | ₪1.49 לסוכריה | 180 סוכריות",
+    productPrice: "269",
+    quantity: 2,
+    monthOfuse: "2 חודשיים",
+    reduction: "",
+    special: "ערכת ניסיון",
+    SKU: "011"
+  },
+  2: {
+    productName: "מארז שלישייה",
+    productKeyName: "מארז_שלישייה",
+    productId: "523281ed-3f33-bd1d-af39-8e37b870d8a5",
+    productImg: "https://static.wixstatic.com/media/aee543_9599f07882b34c8e91c20997b6445362~mv2.jpg",
+    productDescription: "₪125 ליח' | ₪1.38 לסוכריה | 270 סוכריות",
+    productPrice: "375",
+    monthOfuse: "3 חודשיים",
+    quantity: 3,
+    reduction: "7.41% חיסכון",
+    special: "",
+    SKU: "011"
+  },
+  3: {
+    productName: "מארז חמישייה",
+    productKeyName: "מארז_חמישייה",
+    productId: "41dafcf5-623f-1a12-b7ee-c436c19cae88",
+    productImg: "https://static.wixstatic.com/media/aee543_91901e0279fe4d0688e26f51fc49a253~mv2.jpg",
+    productDescription: "₪110 ליח' | ₪1.22 לסוכריה | 450 סוכריות",
+    productPrice: "549",
+    monthOfuse: "5 חודשיים",
+    quantity: 5,
+    reduction: "18.67% חיסכון",
+    special: "הכי נמכר",
+    SKU: "550"
+  },
+  4: {
+    productName: "מארז עשירייה",
+    productKeyName: "מארז_עשירייה",
+    productId: "9921f4a2-f74a-69e8-fbe3-262d7d23a547",
+    productImg: "https://static.wixstatic.com/media/aee543_ecec5ff1f6ea4c158bb2d782dbf4009e~mv2.jpg",
+    productDescription: "₪75 ליח' | ₪0.83 לסוכריה | 900 סוכריות",
+    productPrice: "749",
+    monthOfuse: "10 חודשיים",
+    quantity: 10,
+    reduction: "44.52% חיסכון",
+    special: "הכי משתלם",
+    SKU: "013"
+  }
+};
+
+function send(action, payload) {
+  window.parent.postMessage({source: "eatless-iframe", action, payload}, "*");
+}
+
+document.querySelectorAll('[data-action="add"]').forEach(btn => {
+  btn.addEventListener("click", e => {
+    const card = e.currentTarget.closest('.card');
+    const id = card.getAttribute('data-package');
+    
+    // Add loading state
+    btn.classList.add('loading');
+    
+    // Send message with new product structure
+    send('addToCart', products[id]);
+    
+    // Remove loading after 2.5 seconds
+    setTimeout(() => {
+      btn.classList.remove('loading');
+    }, 2500);
+  });
+});
+
+window.addEventListener('message', e => {
+  const msg = e.data || {};
+  if (msg.action === 'setTheme' && msg.vars) {
+    Object.entries(msg.vars).forEach(([k, v]) => {
+      document.documentElement.style.setProperty(k, v);
+    });
+  }
+});
+
+// Mobile collapsible functionality
+const copyToggle = document.getElementById('copyToggle');
+const copyBox = document.getElementById('copyBox');
+if (copyToggle && copyBox) {
+  copyToggle.addEventListener('click', () => {
+    const expanded = copyBox.classList.toggle('expanded');
+    copyToggle.textContent = expanded ? 'סגור' : 'המשך';
+    copyToggle.setAttribute('aria-expanded', String(expanded));
+  });
+}
+</script>
+</body>
+</html>
