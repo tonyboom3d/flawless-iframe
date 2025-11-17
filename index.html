@@ -323,8 +323,17 @@ document.querySelectorAll('[data-action="add"]').forEach(btn => {
     const card = e.currentTarget.closest('.card');
     const id = card.getAttribute('data-package');
     
+    // Prevent multiple clicks while loading
+    if (btn.classList.contains('loading')) {
+      return;
+    }
+    
     // Add loading state
     btn.classList.add('loading');
+    
+    // Log the product ID being sent
+    console.log('🛒 Adding to cart - Product ID:', products[id].productId);
+    console.log('📦 Full product data:', products[id]);
     
     // Send message with product data including correct productId
     send('addToCart', products[id]);
