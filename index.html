@@ -54,10 +54,11 @@ body{font-family:Assistant,system-ui,Arial;background:#fff;color:#1b1b1b}
 .packages{display:flex;flex-direction:column;gap:var(--gap);text-align:right;direction:rtl}
 .card{position:relative;width:var(--card-w);max-width:100%;height:var(--card-h);background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 6px 18px rgba(0,0,0,.08);overflow:hidden}
 .nameTag{position:absolute;inset-block-start:0;inset-inline-end:0;inset-inline-start:auto;background:var(--chip);color:var(--ink);font-weight:800;font-size:16px;padding:8px 14px;border-radius:8px 0 80px 0}
-.badges{position:absolute;inset-block-start:14px;transform:translateX(-50%);display:flex;gap:6px}
+.badges{position:absolute;inset-block-start:14px;left:50%;transform:translateX(-50%);display:flex;gap:6px;justify-content:center;min-width:209px}
 .badge{display:inline-flex;align-items:center;justify-content:center;height:27px;border-radius:999px;color:#000000;font-size:16px;padding:0 5px;gap:6px}
-.badge.benefit{width:115px;background:#E8DACA;order:1}
-.badge.months{width:88px;background:#f3f3f3;color:#777;order:2}
+.badge.benefit{width:89px;background:#E8DACA}
+.badge.months{width:88px;background:#f3f3f3;color:#777}
+.badge.invisible{opacity:0;pointer-events:none;visibility:hidden}
 .price{position:absolute;inset-inline-end:var(--price-right);top:50px;transform:none;display:flex;flex-direction:column;text-align:right;width:auto;z-index:2}
 .value{display:inline-flex;align-items:center;gap:6px;color:var(--pink);font-weight:800;font-size:28px;line-height:1;direction:rtl;unicode-bidi:isolate;text-align:right}
 .meta{color:var(--muted);font-weight:300;font-size:17px;margin-top:6px;align-self:stretch;text-align:right}
@@ -226,6 +227,7 @@ body{font-family:Assistant,system-ui,Arial;background:#fff;color:#1b1b1b}
           <div class="nameTag">מארז שלישייה</div>
           <div class="badges">
             <div class="badge months">3 חודשים</div>
+            <div class="badge benefit invisible">placeholder</div>
           </div>
           <div class="price">
             <div class="value"><span class="num">375</span><span class="cur">₪</span></div>
@@ -298,7 +300,7 @@ const products = {
     quantity: 2,
     monthOfuse: "2 חודשיים",
     reduction: "",
-    special: "ערכת ניסיון",
+    special: "",
     SKU: "011"
   },
   2: {
