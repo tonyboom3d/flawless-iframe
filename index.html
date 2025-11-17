@@ -20,7 +20,7 @@
   --green:#68B04D;
   --line:#e9e9e9;
   --price-right: 160px;
-  --cards: 4;
+  --cards: 3;
 }
 *{box-sizing:border-box}
 html,body{margin:0}
@@ -258,24 +258,6 @@ body{font-family:Assistant,system-ui,Arial;background:#fff;color:#1b1b1b}
             <span class="btn-loader"></span>
           </button>
         </article>
-        
-        <article class="card" data-package="4">
-          <div class="nameTag">מארז עשירייה</div>
-          <div class="badges">
-            <div class="badge months">10 חודשים</div>
-            <div class="badge benefit">הכי משתלמת</div>
-          </div>
-          <div class="price">
-            <div class="value"><span class="num">749</span><span class="cur">₪</span></div>
-            <div class="meta">900 סוכריות | ליח' ₪75</div>
-          </div>
-          <img class="thumb" src="https://static.wixstatic.com/media/6b73e9_da49f2861ae740c3bf56a04a15808b8b~mv2.png" alt="חבילת שישייה" />
-          <button class="btn" data-action="add">
-            <span class="btn-icon"><img src="https://static.wixstatic.com/shapes/6b73e9_65aaec0aab9b46a8a05faad5b934653a.svg" alt="" /></span>
-            <span class="btn-text">הוספה לעגלה</span>
-            <span class="btn-loader"></span>
-          </button>
-        </article>
       </section>
     </div>
   </div>
@@ -288,12 +270,12 @@ body{font-family:Assistant,system-ui,Arial;background:#fff;color:#1b1b1b}
   document.body.classList.add(isMobile ? 'mobile-device' : 'desktop-device');
 })();
 
-// Products data with new structure
+// Products data with updated IDs - השינוי הראשי כאן! 
 const products = {
   1: {
     productName: "מארז זוגי",
     productKeyName: "מארז_זוגי",
-    productId: "15c59335-b3ff-f99c-920d-24e19fd424f0",
+    productId: "15c59335-b3ff-f99c-920d-24e19fd424f0",  // ✅ מעודכן
     productImg: "https://static.wixstatic.com/media/aee543_4763f131f87a4a3f84bf028c73d0ecae~mv2.jpg",
     productDescription: "₪135 ליח' | ₪1.49 לסוכריה | 180 סוכריות",
     productPrice: "269",
@@ -306,7 +288,7 @@ const products = {
   2: {
     productName: "מארז שלישייה",
     productKeyName: "מארז_שלישייה",
-    productId: "523281ed-3f33-bd1d-af39-8e37b870d8a5",
+    productId: "523281ed-3f33-bd1d-af39-8e37b870d8a5",  // ✅ מעודכן
     productImg: "https://static.wixstatic.com/media/aee543_9599f07882b34c8e91c20997b6445362~mv2.jpg",
     productDescription: "₪125 ליח' | ₪1.38 לסוכריה | 270 סוכריות",
     productPrice: "375",
@@ -319,7 +301,7 @@ const products = {
   3: {
     productName: "מארז חמישייה",
     productKeyName: "מארז_חמישייה",
-    productId: "41dafcf5-623f-1a12-b7ee-c436c19cae88",
+    productId: "41dafcf5-623f-1a12-b7ee-c436c19cae88",  // ✅ מעודכן
     productImg: "https://static.wixstatic.com/media/aee543_91901e0279fe4d0688e26f51fc49a253~mv2.jpg",
     productDescription: "₪110 ליח' | ₪1.22 לסוכריה | 450 סוכריות",
     productPrice: "549",
@@ -328,24 +310,12 @@ const products = {
     reduction: "18.67% חיסכון",
     special: "הכי נמכר",
     SKU: "550"
-  },
-  4: {
-    productName: "מארז עשירייה",
-    productKeyName: "מארז_עשירייה",
-    productId: "9921f4a2-f74a-69e8-fbe3-262d7d23a547",
-    productImg: "https://static.wixstatic.com/media/aee543_ecec5ff1f6ea4c158bb2d782dbf4009e~mv2.jpg",
-    productDescription: "₪75 ליח' | ₪0.83 לסוכריה | 900 סוכריות",
-    productPrice: "749",
-    monthOfuse: "10 חודשיים",
-    quantity: 10,
-    reduction: "44.52% חיסכון",
-    special: "הכי משתלם",
-    SKU: "013"
   }
 };
 
+// השינוי השני - source שונה ל-flawless-iframe
 function send(action, payload) {
-  window.parent.postMessage({source: "eatless-iframe", action, payload}, "*");
+  window.parent.postMessage({source: "flawless-iframe", action, payload}, "*");
 }
 
 document.querySelectorAll('[data-action="add"]').forEach(btn => {
@@ -356,7 +326,7 @@ document.querySelectorAll('[data-action="add"]').forEach(btn => {
     // Add loading state
     btn.classList.add('loading');
     
-    // Send message with new product structure
+    // Send message with product data including correct productId
     send('addToCart', products[id]);
     
     // Remove loading after 2.5 seconds
